@@ -1,0 +1,58 @@
+import numpy as np
+from scipy.optimize import curve_fit
+
+def read_matsubara_function_re(filename):
+
+    f = open(filename)
+    lines = f.readlines()
+    Iw = len(lines)
+    func = np.zeros(Iw, dtype=np.float64)
+    freq = np.zeros(Iw, dtype=np.float64)
+    j = 0
+    for i in lines:
+        line = i.split()
+        freq[j] = np.float64(line[0])
+        func[j] = np.float64(line[1])
+        j += 1
+    return freq, func
+
+def read_matsubara_function_im(filename):
+
+    f = open(filename)
+    lines = f.readlines()
+    Iw = len(lines)
+    func = np.zeros(Iw, dtype=np.float64)
+    freq = np.zeros(Iw, dtype=np.float64)
+    j = 0
+    for i in lines:
+        line = i.split()
+        freq[j] = np.float64(line[0])
+        func[j] = np.float64(line[2])
+        j += 1
+    return freq, func
+
+def lambdaW(freq, w0, W):
+    return 2.0 * w0 * W * W / (freq * freq - w0 * w0)
+
+def deltaW(freq, Vk1, Vk2, Epsk1, Epsk2):
+
+    res = 0.0
+    res += Vk1 * Vk1 / (freq - Epsk1)
+    res += Vk2 * Vk2 / (freq - Epsk2)
+    # res += Vk3 * Vk3 / (freq - Epsk3)
+
+    return res
+
+filename = "Phi.dat"
+freq, func = read_matsubara_function_re(filename)
+xdata = freq
+ydata = func
+popt, pcov = curve_fit(lambdaW, xdata, ydata)
+print popt
+
+filename = "Delta.dat"
+freq, func = read_matsubara_function_im(filename)
+xdata = freq
+ydata = func
+popt, pcov = curve_fit(deltaW, xdata, ydata)
+print popt
