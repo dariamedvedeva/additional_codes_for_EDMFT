@@ -1,4 +1,5 @@
 import numpy as np
+import sys
 
 if len (sys.argv) > 1:
     filename = sys.argv[1]
