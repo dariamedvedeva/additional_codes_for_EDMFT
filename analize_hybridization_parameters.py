@@ -1,6 +1,12 @@
 import numpy as np
 
-f = open("fort.17", "r")
+if len (sys.argv) > 1:
+    filename = sys.argv[1]
+else:
+    print ("Enter filename")
+    os.abort()
+
+f = open(filename, "r")
 f_lambda = open("lambda_for_iterations.dat", "w")
 lines = f.readlines()
 count = 0
